@@ -1,0 +1,19 @@
+ AgilentDataFile as.character.AgilentDataFile
+ countLines.AgilentDataFile getBarcode getBarcode.AgilentDataFile
+ getColumnNames.AgilentDataFile getDimension
+ getDimension.AgilentDataFile getHeader.AgilentDataFile getScanDate
+ getScanDate.AgilentDataFile hasColumnHeader.AgilentDataFile
+ readColumnFast readColumnFast.AgilentDataFile
+ readColumnNames.AgilentDataFile readColumnsFast
+ readColumnsFast.AgilentDataFile readFeatures
+ readFeatures.AgilentDataFile readFeaturesColumn
+ readFeaturesColumn.AgilentDataFile readLines.AgilentDataFile
+ readRawHeader.AgilentDataFile readSection readSection.AgilentDataFile
+ readSections readSections.AgilentDataFile readSectionsIdxs
+ readSectionsIdxs.AgilentDataFile verify.AgilentDataFile
+  readFeaturesColumns readFeaturesColumns.AgilentDataFile
+  AgilentDataSet byPath.AgilentDataSet exportCopyNumbers
+  exportCopyNumbers.AgilentDataFile getChipType.AgilentDataFile
+  getChipType.AgilentDataSet getExtensionPattern.AgilentDataFile
+  getPlatform.AgilentDataFile getPlatform.AgilentDataSet
+  nbrOfLines.AgilentDataFile nbrOfRows.AgilentDataFile
