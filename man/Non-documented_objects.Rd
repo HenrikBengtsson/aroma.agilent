@@ -55,6 +55,7 @@
 \alias{getPlatform.AgilentDataSet}
 \alias{nbrOfLines.AgilentDataFile}
 \alias{nbrOfRows.AgilentDataFile}
+\alias{exportCopyNumbers.AgilentDataSet}
 
 \description{
   This page contains aliases for all "non-documented" objects that

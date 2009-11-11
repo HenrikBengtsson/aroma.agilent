@@ -1,5 +1,10 @@
 Package: aroma.agilent
 ======================
 
+Version: 0.1.1 [2009-11-10]
+o Added exportCopyNumbers() to AgilentDataSet.
+o Added testScripts/ directory.
+
+
 Version: 0.1.0 [2009-11-07]
 o Created.

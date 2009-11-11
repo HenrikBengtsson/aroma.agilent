@@ -17,3 +17,4 @@
   getChipType.AgilentDataSet getExtensionPattern.AgilentDataFile
   getPlatform.AgilentDataFile getPlatform.AgilentDataSet
   nbrOfLines.AgilentDataFile nbrOfRows.AgilentDataFile
+ exportCopyNumbers.AgilentDataSet

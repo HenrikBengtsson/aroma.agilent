@@ -1,6 +1,6 @@
 Package: aroma.agilent
-Version: 0.1.0
-Date: 2009-11-09
+Version: 0.1.1
+Date: 2009-11-10
 Title: Analysis of Agilent microarray data [A DRAFT - TRUE]
 Author: Henrik Bengtsson <henrikb@braju.com>
 Maintainer: Henrik Bengtsson <henrikb@braju.com>
