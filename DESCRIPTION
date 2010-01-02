@@ -1,10 +1,10 @@
 Package: aroma.agilent
-Version: 0.1.1
-Date: 2009-11-10
+Version: 0.1.2
+Date: 2010-01-01
 Title: Analysis of Agilent microarray data [A DRAFT - TRUE]
 Author: Henrik Bengtsson <henrikb@braju.com>
 Maintainer: Henrik Bengtsson <henrikb@braju.com>
-Depends: R (>= 2.10.0), R.methodsS3 (>= 1.0.3), R.oo (>= 1.6.5), R.utils (>= 1.2.4), R.cache (>= 0.2.0), R.filesets (>= 0.6.5), aroma.core (>= 1.3.0), aroma.light (>= 1.14.0)
+Depends: R (>= 2.10.0), R.methodsS3 (>= 1.0.3), R.oo (>= 1.6.5), R.utils (>= 1.3.0), R.cache (>= 0.2.0), R.filesets (>= 0.7.0), aroma.core (>= 1.3.7), aroma.light (>= 1.14.0)
 Imports: 
 Suggests: GLAD (>= 1.12.0), DNAcopy (>= 1.20.0), HaarSeg (>= 0.0.2)
 Description: This package provides method for analysis of Agilent data.

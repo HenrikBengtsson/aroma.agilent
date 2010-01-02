@@ -249,7 +249,7 @@ setMethodS3("readFeaturesColumns", "AgilentDataFile", function(this, columns, ..
     columnNames <- columns;
     columns <- match(columnNames, allColumnNames);
   }
-  columns <- Arguments$getIndices(columns, range=c(1, length(allColumnNames)));
+  columns <- Arguments$getIndices(columns, max=length(allColumnNames));
   columnNames <- allColumnNames[columns];
 
   data <- list();
@@ -457,9 +457,7 @@ setMethodS3("exportCopyNumbers", "AgilentDataFile", function(this, dataSet, unf,
   dataSet <- Arguments$getCharacter(dataSet);
 
   # Argument 'unf':
-  if (!inherits(unf, "UnitNamesFile")) {
-    throw("Argument 'unf' is not a UnitNamesFile: ", class(unf)[1]);
-  }
+  unf <- Arguments$getInstanceOf(unf, "UnitNamesFile");
 
   # Argument 'rootPath':
   if (length(rootPath) > 1) {
