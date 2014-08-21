@@ -342,9 +342,6 @@ setMethodS3("readSection", "AgilentDataFile", function(this, section, n=-1L, ...
     nFile <- (range[1]+1L) + n;
   }
 
-  str(this)
-  str(readLines)
-
   bfr <- readLines(this, n=nFile);
 
   rrs <- (range[1]:nFile);
