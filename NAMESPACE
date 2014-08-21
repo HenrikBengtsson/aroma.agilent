@@ -45,6 +45,7 @@ importFrom("R.utils", "cat") ## Multi-sources: R.utils, base
 importFrom("R.utils", "enter")
 importFrom("R.utils", "exit")
 importFrom("R.utils", "getFilename") ## Multi-sources: R.utils, R.filesets
+importFrom("R.utils", "hpaste")
 importFrom("R.utils", "inherits") ## Multi-sources: R.utils, base
 importFrom("R.utils", "isFile") ## Multi-sources: R.utils, R.filesets
 importFrom("R.utils", "less")

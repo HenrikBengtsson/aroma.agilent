@@ -1,5 +1,5 @@
 # \section{File format}{
-# <qoute [3]>
+# <quote [3]>
 #  A full version of the text files contains three sections namely
 #  FEPARAMS, STATS, and FEATURES.
 #
@@ -19,7 +19,7 @@
 #  (probe). Some of the important data include the physical locations
 #  of probes (features) on an array, intensity measurements, quality
 #  flags, and biological annotations.
-# </qoute>
+# </quote>
 # }
 #
 # \references{
@@ -46,10 +46,13 @@ setMethodS3("as.character", "AgilentDataFile", function(x, ...) {
   s <- NextMethod("as.character", this, ...);
   class <- class(s);
   s <- c(s, sprintf("Number of text lines: %d", nbrOfLines(this, fast=TRUE)));
-  s <- c(s, sprintf("Chip type: %s", getChipType(this)));
-  s <- c(s, sprintf("Chip dimension: %s", paste(getDimension(this), collapse="x")));
+
   s <- c(s, sprintf("Barcode: %s", getBarcode(this)));
   s <- c(s, sprintf("Scan date: %s", getScanDate(this)));
+  s <- c(s, sprintf("Chip type: %s", getChipType(this)));
+  s <- c(s, sprintf("Chip dimension: %s", paste(getDimension(this), collapse="x")));
+  cols <- getColumnNames(this);
+  s <- c(s, sprintf("Column names [%d]: %s", length(cols), hpaste(sQuote(cols))));
 
   class(s) <- class;
   s;
