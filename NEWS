@@ -2,14 +2,19 @@ Package: aroma.agilent
 ======================
 
 Version: 0.2.0 [2014-08-21]
+o Now print() for AgilentDataFile reports on chip type, chip dimensions,
+  barcode and scan date.
 o Package now exports Package object 'aroma.agilent'.
 o Made package build on more recent versions of R, e.g. adding
   a NAMESPACE file, properly importing functions etc.
+o CLEANUP: Internal readColumnsFast() for AgilentDataFile would
+  not close an open pipe to a system call.
+o BUG FIX: getBarcode() and getScanDate() only worked if force=TRUE.
 
 
 Version: 0.1.2 [2010-01-01]
-o ROBUSTNESS: Using new Arguments$getInstanceOf() were possible. 
-o ROBUSTNESS: Now all index arguments are validated correctly 
+o ROBUSTNESS: Using new Arguments$getInstanceOf() were possible.
+o ROBUSTNESS: Now all index arguments are validated correctly
   using the new 'max' argument of Arguments$getIndices().  Before
   the case where "max == 0" was not handled correctly.
 

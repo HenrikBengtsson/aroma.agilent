@@ -1,27 +1,58 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # IMPORTS
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-importFrom("R.methodsS3", "setMethodS3")
-importFrom("R.oo", "setConstructorS3")
-importFrom("R.oo", "extend")
-importFrom("R.oo", "uses")
-importFrom("R.oo", "newInstance")
-importFrom("R.methodsS3", "throw")
-importFrom("R.oo", "startupMessage")
-importFrom("methods", "setOldClass")
-importFrom("methods", "setMethod")
-importFrom("R.oo", "getDate")
-importFrom("R.oo", "getVersion")
-importFrom("R.oo", "trim")
+## Importing generics
+importFrom("aroma.core", "getChipType")
+importFrom("aroma.core", "getPlatform")
+importFrom("R.filesets", "byPath")
+importFrom("R.filesets", "getColumnNames")
+importFrom("R.filesets", "getExtensionPattern")
+importFrom("R.filesets", "getHeader")
+importFrom("R.filesets", "hasColumnHeader")
+importFrom("R.filesets", "nbrOfLines")
+importFrom("R.filesets", "nbrOfRows")
+importFrom("R.filesets", "readColumnNames")
+importFrom("R.filesets", "readLines") ## Multi-sources: R.filesets, base
+importFrom("R.filesets", "readRawHeader")
+importFrom("R.filesets", "verify")
+importFrom("R.utils", "countLines")
 
-## Importing Class:es
-
+## Importing functions
+importFrom("aroma.core", "AromaUnitTotalCnBinaryFile")
+importFrom("aroma.core", "readFooter")
+importFrom("aroma.core", "writeFooter")
+importFrom("digest", "digest")
+importFrom("R.cache", "getChecksum") ## Multi-sources: R.cache, R.filesets
+importFrom("R.filesets", "byPath.GenericDataFileSet")
 importFrom("R.filesets", "GenericTabularFile")
 importFrom("R.filesets", "GenericTabularFileSet")
+importFrom("R.filesets", "getFile")
+importFrom("R.filesets", "getFileClass")
+importFrom("R.filesets", "getFileSize")
+importFrom("R.filesets", "getFullName")
+importFrom("R.filesets", "getPathname")
+importFrom("R.filesets", "indexOf")
+importFrom("R.filesets", "nbrOfFiles")
+importFrom("R.filesets", "readDataFrame")
+importFrom("R.methodsS3", "throw")
+importFrom("R.oo", "extend")
+importFrom("R.oo", "getName") ## Multi-sources: R.oo, R.filesets
+importFrom("R.oo", "getPath") ## Multi-sources: R.oo, R.filesets
+importFrom("R.oo", "getStaticInstance")
+importFrom("R.oo", "Package")
+importFrom("R.oo", "startupMessage")
+importFrom("R.utils", "cat") ## Multi-sources: R.utils, base
+importFrom("R.utils", "enter")
+importFrom("R.utils", "exit")
+importFrom("R.utils", "getFilename") ## Multi-sources: R.utils, R.filesets
+importFrom("R.utils", "inherits") ## Multi-sources: R.utils, base
+importFrom("R.utils", "isFile") ## Multi-sources: R.utils, R.filesets
+importFrom("R.utils", "less")
+importFrom("R.utils", "popState")
+importFrom("R.utils", "pushState")
+importFrom("R.utils", "whichVector")
 
-import("R.utils")
-import("aroma.core")
-# importFrom("Biobase", "anyMissing")
+import("aroma.light")
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -35,3 +66,36 @@ exportPattern("^[^\\.]")
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # DECLARATIONS
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# AgilentDataFile
+S3method("as.character", "AgilentDataFile")
+S3method("countLines", "AgilentDataFile")
+S3method("exportCopyNumbers", "AgilentDataFile")
+S3method("getBarcode", "AgilentDataFile")
+S3method("getChipType", "AgilentDataFile")
+S3method("getColumnNames", "AgilentDataFile")
+S3method("getDimension", "AgilentDataFile")
+S3method("getExtensionPattern", "AgilentDataFile")
+S3method("getHeader", "AgilentDataFile")
+S3method("getPlatform", "AgilentDataFile")
+S3method("getScanDate", "AgilentDataFile")
+S3method("hasColumnHeader", "AgilentDataFile")
+S3method("nbrOfLines", "AgilentDataFile")
+S3method("nbrOfRows", "AgilentDataFile")
+S3method("readColumnFast", "AgilentDataFile")
+S3method("readColumnNames", "AgilentDataFile")
+S3method("readColumnsFast", "AgilentDataFile")
+S3method("readFeatures", "AgilentDataFile")
+S3method("readFeaturesColumn", "AgilentDataFile")
+S3method("readFeaturesColumns", "AgilentDataFile")
+S3method("readLines", "AgilentDataFile")
+S3method("readRawHeader", "AgilentDataFile")
+S3method("readSection", "AgilentDataFile")
+S3method("readSections", "AgilentDataFile")
+S3method("readSectionsIdxs", "AgilentDataFile")
+S3method("verify", "AgilentDataFile")
+
+# AgilentDataSet
+S3method("byPath", "AgilentDataSet")
+S3method("exportCopyNumbers", "AgilentDataSet")
+S3method("getChipType", "AgilentDataSet")
+S3method("getPlatform", "AgilentDataSet")

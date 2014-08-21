@@ -46,6 +46,9 @@ setMethodS3("as.character", "AgilentDataFile", function(x, ...) {
   s <- NextMethod("as.character", this, ...);
   class <- class(s);
   s <- c(s, sprintf("Number of text lines: %d", nbrOfLines(this, fast=TRUE)));
+  s <- c(s, sprintf("Chip type: %s", getChipType(this)));
+  s <- c(s, sprintf("Chip dimension: %s", paste(getDimension(this), collapse="x")));
+  s <- c(s, sprintf("Barcode: %s", getBarcode(this)));
 
   class(s) <- class;
   s;
@@ -175,9 +178,24 @@ setMethodS3("countLines", "AgilentDataFile", function(this, ..., verbose=FALSE) 
   cmd <- sprintf("gawk '{sum += 1}; END {print sum}' '%s'", pathname);
   verbose && cat(verbose, "Command:");
   verbose && print(verbose, cmd);
-  con <- pipe(cmd);
+
+
+  # Open connection
+  con <- pipe(cmd, open="rt");
+  on.exit({
+    if (!is.null(con)) {
+      close(con);
+    }
+  }, add=TRUE);
+
   sum <- readLines(con);
-  as.integer(sum);
+  count <- as.integer(sum);
+
+  # Close pipe
+  close(con);
+  con <- NULL;
+
+  count;
 })
 
 
@@ -220,6 +238,7 @@ setMethodS3("readColumnsFast", "AgilentDataFile", function(this, columns=1, skip
     rm(keep);
   }
 
+  # Close pipe
   close(con);
   con <- NULL;
 
@@ -322,6 +341,9 @@ setMethodS3("readSection", "AgilentDataFile", function(this, section, n=-1L, ...
     nFile <- (range[1]+1L) + n;
   }
 
+  str(this)
+  str(readLines)
+
   bfr <- readLines(this, n=nFile);
 
   rrs <- (range[1]:nFile);
@@ -395,7 +417,7 @@ setMethodS3("getDimension", "AgilentDataFile", function(this, ..., force=FALSE) 
 
 setMethodS3("getScanDate", "AgilentDataFile", function(this, ..., force=FALSE) {
   scanDate <- this$.scanDate;
-  if (force || is.null(dim)) {
+  if (force || is.null(scanDate)) {
     hdr <- getHeader(this, ..., force=force);
     hdr <- hdr[["FEPARAMS"]];
     scanDate <- hdr[["Scan_Date"]];
@@ -406,7 +428,7 @@ setMethodS3("getScanDate", "AgilentDataFile", function(this, ..., force=FALSE) {
 
 setMethodS3("getBarcode", "AgilentDataFile", function(this, ..., force=FALSE) {
   barcode <- this$.barcode;
-  if (force || is.null(dim)) {
+  if (force || is.null(barcode)) {
     hdr <- getHeader(this, ..., force=force);
     hdr <- hdr[["FEPARAMS"]];
     barcode <- hdr[["FeatureExtractor_Barcode"]];
@@ -578,6 +600,8 @@ setMethodS3("exportCopyNumbers", "AgilentDataFile", function(this, dataSet, unf,
 
 ############################################################################
 # HISTORY:
+# 2014-08-21
+# o BUG FIX: getBarcode() and getScanDate() only worked if force=TRUE.
 # 2009-11-09
 # o Added exportCopyNumbers() for AgilentDataFile.
 # 2009-11-07
