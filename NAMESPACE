@@ -1,0 +1,37 @@
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# IMPORTS
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+importFrom("R.methodsS3", "setMethodS3")
+importFrom("R.oo", "setConstructorS3")
+importFrom("R.oo", "extend")
+importFrom("R.oo", "uses")
+importFrom("R.oo", "newInstance")
+importFrom("R.methodsS3", "throw")
+importFrom("R.oo", "startupMessage")
+importFrom("methods", "setOldClass")
+importFrom("methods", "setMethod")
+importFrom("R.oo", "getDate")
+importFrom("R.oo", "getVersion")
+importFrom("R.oo", "trim")
+
+## Importing Class:es
+
+importFrom("R.filesets", "GenericTabularFile")
+importFrom("R.filesets", "GenericTabularFileSet")
+
+import("R.utils")
+import("aroma.core")
+# importFrom("Biobase", "anyMissing")
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# EXPORTS
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Export all public methods, that is, those without a preceeding dot
+# in their names.
+exportPattern("^[^\\.]")
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# DECLARATIONS
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

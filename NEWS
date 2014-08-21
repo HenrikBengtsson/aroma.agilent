@@ -1,6 +1,12 @@
 Package: aroma.agilent
 ======================
 
+Version: 0.2.0 [2014-08-21]
+o Package now exports Package object 'aroma.agilent'.
+o Made package build on more recent versions of R, e.g. adding
+  a NAMESPACE file, properly importing functions etc.
+
+
 Version: 0.1.2 [2010-01-01]
 o ROBUSTNESS: Using new Arguments$getInstanceOf() were possible. 
 o ROBUSTNESS: Now all index arguments are validated correctly 

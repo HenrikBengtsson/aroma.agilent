@@ -1,24 +1,24 @@
 # \section{File format}{
 # <qoute [3]>
-#  A full version of the text files contains three sections namely 
+#  A full version of the text files contains three sections namely
 #  FEPARAMS, STATS, and FEATURES.
 #
 #  FEPARAMS is the top most section containing the parameter and
 #  option settings under which the feature extraction software runs.
 #  Examples include the protocol name, version of the grid placement
-#  algorithm, offset values, etc. 
-# 
+#  algorithm, offset values, etc.
+#
 #  STATS is the middle section that provides statistical descriptions
-#  of the results (usually on per channel or image basis). Examples 
+#  of the results (usually on per channel or image basis). Examples
 #  include average number of saturated features per channel, standard
 #  deviation of the data points measured per channel, number of features
-#  that are flagged as population outliers, etc. 
-# 
+#  that are flagged as population outliers, etc.
+#
 #  FEATURES is the section that concerns most users as it contains
-#  values/descriptions of the results for each individual feature 
+#  values/descriptions of the results for each individual feature
 #  (probe). Some of the important data include the physical locations
-#  of probes (features) on an array, intensity measurements, quality 
-#  flags, and biological annotations.  
+#  of probes (features) on an array, intensity measurements, quality
+#  flags, and biological annotations.
 # </qoute>
 # }
 #
@@ -126,6 +126,16 @@ setMethodS3("getColumnNames", "AgilentDataFile", function(this, ..., translate=T
 })
 
 
+setMethodS3("getColumnNames", "AgilentDataFile", function(this, ..., force=FALSE) {
+  colnames <- this$.colnames;
+  if (force || is.null(colnames)) {
+    data <- readFeatures(this, n=1, ...);
+    colnames <- colnames(data);
+    this$.colnames <- colnames;
+  }
+  colnames;
+})
+
 
 setMethodS3("getHeader", "AgilentDataFile", function(this, ..., force=FALSE) {
   hdr <- this$.fileHeader;
@@ -135,6 +145,15 @@ setMethodS3("getHeader", "AgilentDataFile", function(this, ..., force=FALSE) {
       hdr$columns <- hdr$topRows[[1]];
     }
     this$.fileHeader <- hdr;
+  }
+  hdr;
+})
+
+setMethodS3("getHeader", "AgilentDataFile", function(this, ..., force=FALSE) {
+  hdr <- this$.hdr;
+  if (force || is.null(hdr)) {
+    hdr <- readRawHeader(this, ...);
+    this$.hdr <- hdr;
   }
   hdr;
 })
@@ -310,12 +329,12 @@ setMethodS3("readSection", "AgilentDataFile", function(this, section, n=-1L, ...
   bfr <- strsplit(bfr, split="\t");
   bfr <- lapply(bfr, FUN=function(x) x[-1]);
 
-  types <- bfr[[1]];  
-  names <- bfr[[2]];  
+  types <- bfr[[1]];
+  names <- bfr[[2]];
 
   nrow <- length(bfr)-2L;
   ncol <- length(types);
-  
+
   modes <- types;
   modes[modes == "text"] <- "character";
   modes[modes == "float"] <- "double";
@@ -350,7 +369,7 @@ setMethodS3("readSections", "AgilentDataFile", function(this, sections, ...) {
     section <- sections[[kk]];
     res[[kk]] <- readSection(this, section=section, verbose=verbose);
   } # for (kk ...)
-  res;  
+  res;
 })
 
 setMethodS3("readRawHeader", "AgilentDataFile", function(this, ...) {
@@ -359,15 +378,6 @@ setMethodS3("readRawHeader", "AgilentDataFile", function(this, ...) {
   keep <- intersect(names(sections), knownHeaderFields);
   sections <- sections[keep];
   readSections(this, sections=sections, ...);
-})
-
-setMethodS3("getHeader", "AgilentDataFile", function(this, ..., force=FALSE) {
-  hdr <- this$.hdr;
-  if (force || is.null(hdr)) {
-    hdr <- readRawHeader(this, ...);
-    this$.hdr <- hdr;
-  }
-  hdr;
 })
 
 setMethodS3("getDimension", "AgilentDataFile", function(this, ..., force=FALSE) {
@@ -411,18 +421,6 @@ setMethodS3("readFeatures", "AgilentDataFile", function(this, ...) {
   section <- sections[["FEATURES"]];
   readSection(this, section=section, ...);
 })
-
-
-setMethodS3("getColumnNames", "AgilentDataFile", function(this, ..., force=FALSE) {
-  colnames <- this$.colnames;
-  if (force || is.null(colnames)) {
-    data <- readFeatures(this, n=1, ...);
-    colnames <- colnames(data);
-    this$.colnames <- colnames;
-  }
-  colnames;
-})
-
 
 
 setMethodS3("readLines", "AgilentDataFile", function(con, ...) {
@@ -475,7 +473,7 @@ setMethodS3("exportCopyNumbers", "AgilentDataFile", function(this, dataSet, unf,
   verbose && enter(verbose, "Exporting ", class(this)[1]);
 
   chipType <- getChipType(unf, fullname=FALSE);
-  
+
   path <- file.path(rootPath, dataSet, chipType);
   path <- Arguments$getWritablePath(path);
   verbose && cat(verbose, "Data set path: ", path);
@@ -498,7 +496,7 @@ setMethodS3("exportCopyNumbers", "AgilentDataFile", function(this, dataSet, unf,
     if (isFile(pathnameT)) {
       throw("Temporary file already exists: ", pathnameT);
     }
-  
+
     # Map unit indices
     if (is.null(units)) {
       verbose && enter(verbose, "Identifying unit indices");
@@ -513,7 +511,7 @@ setMethodS3("exportCopyNumbers", "AgilentDataFile", function(this, dataSet, unf,
       verbose && str(verbose, units);
       verbose && exit(verbose);
     }
-  
+
     # Read data
     verbose && enter(verbose, "Reading column data");
     columnName <- "LogRatio";
@@ -522,7 +520,7 @@ setMethodS3("exportCopyNumbers", "AgilentDataFile", function(this, dataSet, unf,
     data <- lapply(data, FUN=as.double);
     data <- as.data.frame(data);
     verbose && exit(verbose);
-  
+
     # Allocate output data
     verbose && enter(verbose, "Generating 'srcFile' footer");
     srcFile <- list(
@@ -534,27 +532,27 @@ setMethodS3("exportCopyNumbers", "AgilentDataFile", function(this, dataSet, unf,
     );
     verbose && str(verbose, srcFile);
     verbose && exit(verbose);
-  
+
     on.exit({
       if (!is.null(pathnameT) && isFile(pathnameT)) {
         file.remove(pathnameT);
       }
     }, add=TRUE);
-  
+
     verbose && enter(verbose, "Allocating temporary file");
-    df <- AromaUnitTotalCnBinaryFile$allocateFromUnitNamesFile(unf, 
+    df <- AromaUnitTotalCnBinaryFile$allocateFromUnitNamesFile(unf,
                                             filename=pathnameT, path=NULL);
     footer <- readFooter(df);
     footer$srcFile <- srcFile;
     writeFooter(df, footer);
     verbose && exit(verbose);
-  
+
     verbose && enter(verbose, "Writing signals");
     for (cc in seq(along=data)) {
       df[units,cc] <- data[[cc]];
     }
     verbose && exit(verbose);
-  
+
     verbose && enter(verbose, "Renaming temporary file");
     # Rename temporary file
     file.rename(pathnameT, pathname);
