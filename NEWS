@@ -2,8 +2,8 @@ Package: aroma.agilent
 ======================
 
 Version: 0.2.0 [2014-08-21]
-o Now print() for AgilentDataFile reports on chip type, chip dimensions,
-  barcode and scan date.
+o Now print() for AgilentDataFile reports on chip type, chip
+  dimensions, barcode and scan date.
 o Package now exports Package object 'aroma.agilent'.
 o Made package build on more recent versions of R, e.g. adding
   a NAMESPACE file, properly importing functions etc.

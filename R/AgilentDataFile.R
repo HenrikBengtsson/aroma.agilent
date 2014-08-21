@@ -49,6 +49,7 @@ setMethodS3("as.character", "AgilentDataFile", function(x, ...) {
   s <- c(s, sprintf("Chip type: %s", getChipType(this)));
   s <- c(s, sprintf("Chip dimension: %s", paste(getDimension(this), collapse="x")));
   s <- c(s, sprintf("Barcode: %s", getBarcode(this)));
+  s <- c(s, sprintf("Scan date: %s", getScanDate(this)));
 
   class(s) <- class;
   s;
