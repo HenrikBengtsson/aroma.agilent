@@ -50,7 +50,9 @@ setMethodS3("as.character", "AgilentDataFile", function(x, ...) {
   s <- c(s, sprintf("Barcode: %s", getBarcode(this)));
   s <- c(s, sprintf("Scan date: %s", getScanDate(this)));
   s <- c(s, sprintf("Chip type: %s", getChipType(this)));
-  s <- c(s, sprintf("Chip dimension: %s", paste(getDimension(this), collapse="x")));
+  dim <- getDimension(this);
+  s <- c(s, sprintf("Chip dimension: %s", paste(dim, collapse="x")));
+  s <- c(s, sprintf("Number of units: %d", nbrOfUnits(this)));
   cols <- getColumnNames(this);
   s <- c(s, sprintf("Column names [%d]: %s", length(cols), hpaste(sQuote(cols))));
 
@@ -413,6 +415,17 @@ setMethodS3("getDimension", "AgilentDataFile", function(this, ..., force=FALSE) 
     this$.dimension <- dim;
   }
   dim;
+})
+
+
+setMethodS3("nbrOfFeatures", "AgilentDataFile", function(this, ...) {
+  dim <- getDimension(this, ...);
+  as.integer(prod(dim))
+})
+
+
+setMethodS3("nbrOfUnits", "AgilentDataFile", function(this, ...) {
+  nbrOfFeatures(this, ...);
 })
 
 

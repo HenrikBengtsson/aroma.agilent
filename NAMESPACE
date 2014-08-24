@@ -94,9 +94,11 @@ S3method("readSection", "AgilentDataFile")
 S3method("readSections", "AgilentDataFile")
 S3method("readSectionsIdxs", "AgilentDataFile")
 S3method("verify", "AgilentDataFile")
+S3method("readRGList", "AgilentDataFile")
 
 # AgilentDataSet
 S3method("byPath", "AgilentDataSet")
 S3method("exportCopyNumbers", "AgilentDataSet")
 S3method("getChipType", "AgilentDataSet")
 S3method("getPlatform", "AgilentDataSet")
+S3method("readRGList", "AgilentDataSet")
