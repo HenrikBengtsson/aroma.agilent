@@ -44,8 +44,9 @@ before_install:
     fi
 
 install:
-  - $RENV install_r R.methodsS3 R.oo R.utils R.filesets R.cache aroma.core digest
+  - $RENV install_r R.methodsS3 R.oo R.utils matrixStats
   - $RENV install_bioc aroma.light DNAcopy
+  - $RENV install_r R.filesets R.cache aroma.core digest
 #  - $RENV install_deps
 
 script:
