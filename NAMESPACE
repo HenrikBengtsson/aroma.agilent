@@ -95,6 +95,8 @@ S3method("readSections", "AgilentDataFile")
 S3method("readSectionsIdxs", "AgilentDataFile")
 S3method("verify", "AgilentDataFile")
 S3method("readRGList", "AgilentDataFile")
+S3method("nbrOfFeatures", "AgilentDataFile")
+S3method("nbrOfUnits", "AgilentDataFile")
 
 # AgilentDataSet
 S3method("byPath", "AgilentDataSet")
