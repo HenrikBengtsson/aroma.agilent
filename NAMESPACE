@@ -17,15 +17,22 @@ importFrom("R.filesets", "readRawHeader")
 importFrom("R.filesets", "verify")
 importFrom("R.utils", "countLines")
 
-## Importing functions
+## Importing classes
+importFrom("R.oo", "Class")
+importFrom("R.utils", "Arguments")
+importFrom("R.filesets", "GenericTabularFile")
+importFrom("R.filesets", "GenericTabularFileSet")
 importFrom("aroma.core", "AromaUnitTotalCnBinaryFile")
+importFrom("aroma.core", "AromaUnitTotalCnBinarySet")
+
+## Importing functions
+importFrom("aroma.core", "nbrOfUnits")
 importFrom("aroma.core", "readFooter")
 importFrom("aroma.core", "writeFooter")
 importFrom("digest", "digest")
 importFrom("R.cache", "getChecksum") ## Multi-sources: R.cache, R.filesets
 importFrom("R.filesets", "byPath.GenericDataFileSet")
-importFrom("R.filesets", "GenericTabularFile")
-importFrom("R.filesets", "GenericTabularFileSet")
+importFrom("R.filesets", "getPathnames")
 importFrom("R.filesets", "getFile")
 importFrom("R.filesets", "getFileClass")
 importFrom("R.filesets", "getFileSize")
@@ -52,6 +59,7 @@ importFrom("R.utils", "less")
 importFrom("R.utils", "popState")
 importFrom("R.utils", "pushState")
 importFrom("R.utils", "whichVector")
+importFrom("R.utils", "use")
 
 import("aroma.light")
 

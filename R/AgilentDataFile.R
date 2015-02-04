@@ -34,7 +34,7 @@ setConstructorS3("AgilentDataFile", function(..., .verify=TRUE) {
   );
 
   if (.verify)
-    verify(this, ..., verbose=verbose);
+    verify(this, ...);
   this;
 })
 
@@ -392,7 +392,7 @@ setMethodS3("readSections", "AgilentDataFile", function(this, sections, ...) {
   names(res) <- names(sections);
   for (kk in seq(along=sections)) {
     section <- sections[[kk]];
-    res[[kk]] <- readSection(this, section=section, verbose=verbose);
+    res[[kk]] <- readSection(this, section=section, ...);
   } # for (kk ...)
   res;
 })

@@ -56,6 +56,12 @@
 \alias{nbrOfLines.AgilentDataFile}
 \alias{nbrOfRows.AgilentDataFile}
 \alias{exportCopyNumbers.AgilentDataSet}
+\alias{nbrOfFeatures}
+\alias{nbrOfFeatures.AgilentDataFile}
+\alias{nbrOfUnits.AgilentDataFile}
+\alias{readRGList}
+\alias{readRGList.AgilentDataFile}
+\alias{readRGList.AgilentDataSet}
 
 \description{
   This page contains aliases for all "non-documented" objects that
