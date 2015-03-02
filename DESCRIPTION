@@ -1,16 +1,17 @@
 Package: aroma.agilent
-Version: 0.2.1
-Depends: R (>= 3.1.0), R.utils (>= 1.32.4), aroma.core (>= 2.12.1), aroma.light (>= 2.0.0)
-Imports: R.methodsS3 (>= 1.6.1), R.oo (>= 1.18.0), R.filesets (>= 2.4.0), R.cache (>= 0.10.0), digest (>= 0.6.4)
+Version: 0.2.2
+Depends: R (>= 3.1.2), R.utils (>= 2.0.0), aroma.core (>= 2.13.0), aroma.light (>= 2.0.0)
+Imports: R.methodsS3 (>= 1.7.0), R.oo (>= 1.19.0), R.filesets (>= 2.7.0), R.cache (>= 0.10.0), digest (>= 0.6.8)
 Suggests: limma (>= 3.20.8), DNAcopy (>= 1.38.1), GLAD (>= 1.12.0), HaarSeg (>= 0.0.2)
 SuggestsNote: Recommended: DNAcopy
 Additional_repositories: http://r-forge.r-project.org
-Date: 2014-08-23
-Title: Analysis of Agilent microarray data [A DRAFT - TRUE]
+Date: 2015-03-01
+Title: Analysis of Agilent Microarray Data [draft]
 Authors@R: c(person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
                                           email = "henrikb@braju.com"))
-Description: This package provides method for analysis of Agilent data.
+Description: Provides methods for analyzing Agilent microarray data.
 License: LGPL (>= 2.1)
-URL: http://www.aroma-project.org/
+URL: http://www.aroma-project.org/, https://github.com/HenrikBengtsson/aroma.agilent
+BugReports: https://github.com/HenrikBengtsson/aroma.agilent/issues
 LazyLoad: TRUE
 biocViews: Microarray, OneChannel, TwoChannel, MultiChannel, DataImport, DataRepresentation, Visualization, Preprocessing, QualityControl

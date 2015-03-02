@@ -1,6 +1,9 @@
 Package: aroma.agilent
 ======================
 
+Version: 0.2.2 [2015-03-01]
+
+
 Version: 0.2.1 [2014-08-23]
 o Added readRGList() for AgilentDataFile and AgilentDataSet.
 
