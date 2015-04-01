@@ -47,11 +47,13 @@ setMethodS3("as.character", "AgilentDataFile", function(x, ...) {
   class <- class(s);
   s <- c(s, sprintf("Number of text lines: %d", nbrOfLines(this, fast=TRUE)));
 
+  s <- c(s, sprintf("Design ID: %s", getDesignID(this)));
+  s <- c(s, sprintf("Grid name: %s", getGridName(this)));
   s <- c(s, sprintf("Barcode: %s", getBarcode(this)));
   s <- c(s, sprintf("Scan date: %s", getScanDate(this)));
   s <- c(s, sprintf("Chip type: %s", getChipType(this)));
   dim <- getDimension(this);
-  s <- c(s, sprintf("Chip dimension: %s", paste(dim, collapse="x")));
+  s <- c(s, sprintf("Array dimension: %s", paste(dim, collapse="x")));
   s <- c(s, sprintf("Number of units: %d", nbrOfUnits(this)));
   cols <- getColumnNames(this);
   s <- c(s, sprintf("Column names [%d]: %s", length(cols), hpaste(sQuote(cols))));
@@ -429,26 +431,53 @@ setMethodS3("nbrOfUnits", "AgilentDataFile", function(this, ...) {
 })
 
 
-setMethodS3("getScanDate", "AgilentDataFile", function(this, ..., force=FALSE) {
-  scanDate <- this$.scanDate;
-  if (force || is.null(scanDate)) {
+setMethodS3("getScanDate", "AgilentDataFile", function(this, format="%m-%d-%Y %H:%M:%S", ..., force=FALSE) {
+  value <- this$.scanDate;
+  if (force || is.null(value)) {
     hdr <- getHeader(this, ..., force=force);
     hdr <- hdr[["FEPARAMS"]];
-    scanDate <- hdr[["Scan_Date"]];
-    this$.scanDate <- scanDate;
+    value <- hdr[["Scan_Date"]];
+    if (!is.null(value)) {
+      if (length(value) != 1L) {
+        value <- NA;
+      } else {
+        value <- trim(value)
+        value <- strptime(value, format=format, ...);
+      }
+    }
+    this$.scanDate <- value;
   }
-  scanDate;
+  value;
 })
 
-setMethodS3("getBarcode", "AgilentDataFile", function(this, ..., force=FALSE) {
-  barcode <- this$.barcode;
-  if (force || is.null(barcode)) {
+setMethodS3("getGridName", "AgilentDataFile", function(this, ..., force=FALSE) {
+  value <- this$.gridName;
+  if (force || is.null(value)) {
     hdr <- getHeader(this, ..., force=force);
     hdr <- hdr[["FEPARAMS"]];
-    barcode <- hdr[["FeatureExtractor_Barcode"]];
-    this$.barcode <- barcode;
+    value <- hdr[["Grid_Name"]];
+    this$.gridName <- value;
   }
-  barcode;
+  value;
+})
+
+
+setMethodS3("getBarcode", "AgilentDataFile", function(this, ..., force=FALSE) {
+  value <- this$.barcode;
+  if (force || is.null(value)) {
+    hdr <- getHeader(this, ..., force=force);
+    hdr <- hdr[["FEPARAMS"]];
+    value <- hdr[["FeatureExtractor_Barcode"]];
+    this$.barcode <- value;
+  }
+  value;
+})
+
+
+setMethodS3("getDesignID", "AgilentDataFile", function(this, ...) {
+  value <- getGridName(this, ...)
+  value <- gsub("^([0-9]+).*", "\\1", value)
+  value
 })
 
 
@@ -614,6 +643,8 @@ setMethodS3("exportCopyNumbers", "AgilentDataFile", function(this, dataSet, unf,
 
 ############################################################################
 # HISTORY:
+# 2015-04-01
+# o Now getScanDate() returns a POSIXct object.
 # 2014-08-21
 # o BUG FIX: getBarcode() and getScanDate() only worked if force=TRUE.
 # 2009-11-09

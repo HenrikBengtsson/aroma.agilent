@@ -36,6 +36,13 @@ setMethodS3("getChipType", "AgilentDataSet", function(this, ...) {
 })
 
 
+setMethodS3("getScanDates", "AgilentDataSet", function(this, ...) {
+  res <- lapply(this, FUN=getScanDate, ...)
+  res <- do.call("c", args=res);
+  res
+})
+
+
 setMethodS3("exportCopyNumbers", "AgilentDataSet", function(this, unf, ..., rootPath=c("rawCnData", "cnData"), force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -75,10 +82,10 @@ setMethodS3("exportCopyNumbers", "AgilentDataSet", function(this, unf, ..., root
 
   for (ii in seq(this)) {
     df <- getFile(this, ii);
-    verbose && enter(verbose, sprintf("Array #%d ('%s') of %d", 
+    verbose && enter(verbose, sprintf("Array #%d ('%s') of %d",
                               ii, getName(df), nbrOfFiles(this)));
 
-    dfOut <- exportCopyNumbers(df, dataSet=dataSet, unf=unf, 
+    dfOut <- exportCopyNumbers(df, dataSet=dataSet, unf=unf,
                                rootPath=rootPath, verbose=less(verbose,1));
 
     verbose && cat(verbose, "Output file:");

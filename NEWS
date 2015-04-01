@@ -1,7 +1,15 @@
 Package: aroma.agilent
 ======================
 
-Version: 0.2.2 [2015-03-01]
+Version: 0.2.3 [2015-04-01]
+o Now getScanDate() returns a POSIXct object.
+o Added getScanDates() for AgilentDataSet.
+
+
+Version: 0.2.2 [2015-03-09]
+o Added getGridName() and getDesignID() for AgilentDataFile.
+  The latter infers the Agilent Design ID (unique for each
+  chip type) from the former.
 
 
 Version: 0.2.1 [2014-08-23]
