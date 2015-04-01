@@ -4,6 +4,7 @@ Package: aroma.agilent
 Version: 0.2.3 [2015-04-01]
 o Now getScanDate() returns a POSIXct object.
 o Added getScanDates() for AgilentDataSet.
+o Now print() for AgilentDataSet reports on scan dates and more.
 
 
 Version: 0.2.2 [2015-03-09]

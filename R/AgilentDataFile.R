@@ -140,7 +140,7 @@ setMethodS3("getColumnNames", "AgilentDataFile", function(this, ..., translate=T
 setMethodS3("getColumnNames", "AgilentDataFile", function(this, ..., force=FALSE) {
   colnames <- this$.colnames;
   if (force || is.null(colnames)) {
-    data <- readFeatures(this, n=1, ...);
+    data <- readFeatures(this, n=1L, ...);
     colnames <- colnames(data);
     this$.colnames <- colnames;
   }
@@ -207,7 +207,7 @@ setMethodS3("countLines", "AgilentDataFile", function(this, ..., verbose=FALSE) 
 })
 
 
-setMethodS3("readColumnsFast", "AgilentDataFile", function(this, columns=1, skip=0, ..., verbose=FALSE) {
+setMethodS3("readColumnsFast", "AgilentDataFile", function(this, columns=1L, skip=0, n=-1L, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -226,29 +226,40 @@ setMethodS3("readColumnsFast", "AgilentDataFile", function(this, columns=1, skip
 
   pathname <- getPathname(this);
 
-  columnsStr <- paste(sprintf("$%d", columns), collapse=", ");
-  cmd <- sprintf("gawk '{print %s;}' '%s'", columnsStr, pathname);
-  verbose && cat(verbose, "Command:");
-  verbose && print(verbose, cmd);
+  ## Read all or many many rows?
+  if (length(columns) == 1 && (n < 0 || n > 10e3)) {
+    columnsStr <- paste(sprintf("$%d", columns), collapse=", ");
+    cmd <- sprintf("gawk '{print %s;}' '%s'", columnsStr, pathname);
+    verbose && cat(verbose, "Command:");
+    verbose && print(verbose, cmd);
 
-  # Open connection
-  con <- pipe(cmd, open="rt");
-  on.exit({
-    if (!is.null(con)) {
-      close(con);
-    }
-  }, add=TRUE);
+    # Open connection
+    con <- pipe(cmd, open="rt");
+    on.exit({
+      if (!is.null(con)) {
+        close(con);
+      }
+    }, add=TRUE);
 
-  data <- readLines(con, ..., warn=FALSE);
-  if (skip > 0) {
-    keep <- seq(from=skip+1L, to=length(data));
-    data <- data[keep];
-    rm(keep);
+    data <- readLines(con, n=n, ..., warn=FALSE)
+  } else {
+    data <- scan(pathname, what="character", nlines=1L, sep="\t", ..., quiet=TRUE)
+    what <- vector("list", length=length(data))
+    what[columns] <- "character"
+    data <- scan(pathname, what=what, nlines=n, sep="\t", flush=TRUE, fill=TRUE, ..., quiet=TRUE)
+    data <- data[columns]
   }
 
-  # Close pipe
-  close(con);
-  con <- NULL;
+  data <- unlist(data, use.names=FALSE)
+  dimNA(data) <- c(NA_integer_, length(columns))
+
+  if (skip > 0) {
+    keep <- seq(from=skip+1L, to=nrow(data))
+    data <- data[keep,,drop=FALSE]
+    keep <- NULL # Not needed anymore
+  }
+
+  if (length(columns) == 1L) data <- drop(data)
 
   data;
 })
@@ -313,21 +324,21 @@ setMethodS3("readFeaturesColumns", "AgilentDataFile", function(this, columns, ..
 
 
 setMethodS3("readSectionsIdxs", "AgilentDataFile", function(this, ...) {
-  rowType <- readColumnFast(this, column=1);
+  rowType <- readColumnFast(this, column=1L, ...);
   typeIdxs <- whichVector(rowType == "TYPE");
   nbrOfSections <- length(typeIdxs);
   keyIdxs <- typeIdxs + 1L;
   keys <- rowType[keyIdxs];
   endIdxs <- whichVector(rowType == "*");
   if (length(endIdxs) < nbrOfSections) {
-    endIdxs <- c(endIdxs, length(rowType)+1);
+    endIdxs <- c(endIdxs, length(rowType)+1L);
   }
   dataIdxs <- whichVector(rowType == "DATA");
 
   sections <- vector("list", nbrOfSections);
   names(sections) <- keys;
   for (kk in seq(along=sections)) {
-    idxs <- (keyIdxs[kk]+1):(endIdxs[kk]-1);
+    idxs <- (keyIdxs[kk]+1L):(endIdxs[kk]-1L);
     section <- list(
       typeIdx = typeIdxs[kk],
       keyIdx = keyIdxs[kk],
@@ -399,8 +410,8 @@ setMethodS3("readSections", "AgilentDataFile", function(this, sections, ...) {
   res;
 })
 
-setMethodS3("readRawHeader", "AgilentDataFile", function(this, ...) {
-  sections <- readSectionsIdxs(this, ...);
+setMethodS3("readRawHeader", "AgilentDataFile", function(this, n=100L, ...) {
+  sections <- readSectionsIdxs(this, n=n, ...);
   knownHeaderFields <- c("FEPARAMS", "STATS");
   keep <- intersect(names(sections), knownHeaderFields);
   sections <- sections[keep];
@@ -481,10 +492,10 @@ setMethodS3("getDesignID", "AgilentDataFile", function(this, ...) {
 })
 
 
-setMethodS3("readFeatures", "AgilentDataFile", function(this, ...) {
+setMethodS3("readFeatures", "AgilentDataFile", function(this, n=-1L, ...) {
   sections <- readSectionsIdxs(this, ...);
   section <- sections[["FEATURES"]];
-  readSection(this, section=section, ...);
+  readSection(this, section=section, n=n, ...);
 })
 
 

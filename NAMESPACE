@@ -4,6 +4,7 @@
 ## Importing generics
 importFrom("aroma.core", "getChipType")
 importFrom("aroma.core", "getPlatform")
+importFrom("R.utils", "getOption")
 importFrom("R.filesets", "byPath")
 importFrom("R.filesets", "getColumnNames")
 importFrom("R.filesets", "getExtensionPattern")
