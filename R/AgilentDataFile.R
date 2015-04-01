@@ -29,7 +29,7 @@
 #   [4] ...
 # }
 setConstructorS3("AgilentDataFile", function(..., .verify=TRUE) {
-  this <- extend(GenericTabularFile(..., .verify=FALSE), "AgilentDataFile",
+  this <- extend(GenericTabularFile(..., .verify=FALSE), c("AgilentDataFile", uses("AromaPlatformInterface")),
     .fileHeader = NULL
   );
 

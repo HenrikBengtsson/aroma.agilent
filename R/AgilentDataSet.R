@@ -1,5 +1,5 @@
 setConstructorS3("AgilentDataSet", function(...) {
-  extend(GenericTabularFileSet(...), "AgilentDataSet");
+  extend(GenericTabularFileSet(...), c("AgilentDataSet", uses("AromaPlatformInterface")))
 })
 
 
