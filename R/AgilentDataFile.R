@@ -523,15 +523,12 @@ setMethodS3("nbrOfLines", "AgilentDataFile", function(this, ..., force=FALSE) {
 
 
 
-setMethodS3("exportCopyNumbers", "AgilentDataFile", function(this, dataSet, unf, ..., rootPath=c("rawCnData", "cnData"), force=FALSE, verbose=FALSE) {
+setMethodS3("exportCopyNumbers", "AgilentDataFile", function(this, dataSet, ..., rootPath=c("rawCnData", "cnData"), force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'dataSet':
   dataSet <- Arguments$getCharacter(dataSet);
-
-  # Argument 'unf':
-  unf <- Arguments$getInstanceOf(unf, "UnitNamesFile");
 
   # Argument 'rootPath':
   if (length(rootPath) > 1) {
@@ -547,7 +544,7 @@ setMethodS3("exportCopyNumbers", "AgilentDataFile", function(this, dataSet, unf,
   }
 
   verbose && enter(verbose, "Exporting ", class(this)[1]);
-
+  unf <- getUnitNamesFile(this);
   chipType <- getChipType(unf, fullname=FALSE);
 
   path <- file.path(rootPath, dataSet, chipType);

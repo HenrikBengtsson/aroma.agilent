@@ -73,7 +73,7 @@ setMethodS3("getPlatform", "AgilentDataSet", function(this, ...) {
 })
 
 setMethodS3("getChipType", "AgilentDataSet", function(this, ...) {
-  df <- getFile(this, 1);
+  df <- this[[1]];
   getChipType(df);
 })
 
@@ -85,15 +85,10 @@ setMethodS3("getScanDates", "AgilentDataSet", function(this, ...) {
 })
 
 
-setMethodS3("exportCopyNumbers", "AgilentDataSet", function(this, unf, ..., rootPath=c("rawCnData", "cnData"), force=FALSE, verbose=FALSE) {
+setMethodS3("exportCopyNumbers", "AgilentDataSet", function(this, ..., rootPath=c("rawCnData", "cnData"), force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Argument 'unf':
-  if (!inherits(unf, "UnitNamesFile")) {
-    throw("Argument 'unf' is not a UnitNamesFile: ", class(unf)[1]);
-  }
-
   # Argument 'rootPath':
   if (length(rootPath) > 1) {
     rootPath <- match.arg(rootPath);
@@ -115,6 +110,7 @@ setMethodS3("exportCopyNumbers", "AgilentDataSet", function(this, unf, ..., root
   dataSet <- paste(c(dataSet, tags), collapse=",");
   verbose && cat(verbose, "Output data set:", dataSet);
 
+  unf <- getUnitNamesFile(this);
   chipType <- getChipType(unf, fullname=FALSE);
   verbose && cat(verbose, "Chip type:", chipType);
 
@@ -123,12 +119,12 @@ setMethodS3("exportCopyNumbers", "AgilentDataSet", function(this, unf, ..., root
   verbose && cat(verbose, "Output path:", path);
 
   for (ii in seq(this)) {
-    df <- getFile(this, ii);
+    df <- this[[ii]];
     verbose && enter(verbose, sprintf("Array #%d ('%s') of %d",
                               ii, getName(df), nbrOfFiles(this)));
 
-    dfOut <- exportCopyNumbers(df, dataSet=dataSet, unf=unf,
-                               rootPath=rootPath, verbose=less(verbose,1));
+    dfOut <- exportCopyNumbers(df, dataSet=dataSet, rootPath=rootPath,
+                               force=force, verbose=less(verbose,1));
 
     verbose && cat(verbose, "Output file:");
     verbose && print(verbose, dfOut);
