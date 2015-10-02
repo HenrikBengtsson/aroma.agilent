@@ -12,6 +12,13 @@
 
 
 % Other missing docs
+\alias{as.character.AgilentDataSet}
+\alias{getDesignID}
+\alias{getDesignID.AgilentDataFile}
+\alias{getGridName}
+\alias{getGridName.AgilentDataFile}
+\alias{getScanDates}
+\alias{getScanDates.AgilentDataSet}
 \alias{AgilentDataFile}
 \alias{as.character.AgilentDataFile}
 \alias{countLines.AgilentDataFile}
