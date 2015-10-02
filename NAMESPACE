@@ -62,6 +62,8 @@ importFrom("R.utils", "pushState")
 importFrom("R.utils", "whichVector")
 importFrom("R.utils", "use")
 
+importFrom("utils", "str")
+
 import("aroma.light")
 
 
