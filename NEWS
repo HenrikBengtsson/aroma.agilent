@@ -1,13 +1,14 @@
 Package: aroma.agilent
 ======================
 
-Version: 0.2.2-9000 [2015-04-01]
+Version: 0.2.2-9000 [2015-10-02]
 o Now AgilentData(File|Set) implements AromaPlatformInterface such
   that for instance getUnitNamesFile() works.
 o Now getScanDate() returns a POSIXct object.
 o Added getScanDates() for AgilentDataSet.
 o Now print() for AgilentDataSet reports on scan dates and more.
 o CLEANUP: Dropped argument 'unf' from exportCopyNumbers().
+o CLEANUP: Dropped old internal autoload() statements.
 
 
 Version: 0.2.2 [2015-03-09]
