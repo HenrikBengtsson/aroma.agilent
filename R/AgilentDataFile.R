@@ -29,7 +29,7 @@
 #   [4] ...
 # }
 setConstructorS3("AgilentDataFile", function(..., .verify=TRUE) {
-  this <- extend(GenericTabularFile(..., .verify=FALSE), "AgilentDataFile",
+  this <- extend(GenericTabularFile(..., .verify=FALSE), c("AgilentDataFile", uses("AromaPlatformInterface")),
     .fileHeader = NULL
   );
 
@@ -47,11 +47,13 @@ setMethodS3("as.character", "AgilentDataFile", function(x, ...) {
   class <- class(s);
   s <- c(s, sprintf("Number of text lines: %d", nbrOfLines(this, fast=TRUE)));
 
+  s <- c(s, sprintf("Design ID: %s", getDesignID(this)));
+  s <- c(s, sprintf("Grid name: %s", getGridName(this)));
   s <- c(s, sprintf("Barcode: %s", getBarcode(this)));
   s <- c(s, sprintf("Scan date: %s", getScanDate(this)));
   s <- c(s, sprintf("Chip type: %s", getChipType(this)));
   dim <- getDimension(this);
-  s <- c(s, sprintf("Chip dimension: %s", paste(dim, collapse="x")));
+  s <- c(s, sprintf("Array dimension: %s", paste(dim, collapse="x")));
   s <- c(s, sprintf("Number of units: %d", nbrOfUnits(this)));
   cols <- getColumnNames(this);
   s <- c(s, sprintf("Column names [%d]: %s", length(cols), hpaste(sQuote(cols))));
@@ -138,7 +140,7 @@ setMethodS3("getColumnNames", "AgilentDataFile", function(this, ..., translate=T
 setMethodS3("getColumnNames", "AgilentDataFile", function(this, ..., force=FALSE) {
   colnames <- this$.colnames;
   if (force || is.null(colnames)) {
-    data <- readFeatures(this, n=1, ...);
+    data <- readFeatures(this, n=1L, ...);
     colnames <- colnames(data);
     this$.colnames <- colnames;
   }
@@ -205,7 +207,7 @@ setMethodS3("countLines", "AgilentDataFile", function(this, ..., verbose=FALSE) 
 })
 
 
-setMethodS3("readColumnsFast", "AgilentDataFile", function(this, columns=1, skip=0, ..., verbose=FALSE) {
+setMethodS3("readColumnsFast", "AgilentDataFile", function(this, columns=1L, skip=0, n=-1L, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -224,29 +226,40 @@ setMethodS3("readColumnsFast", "AgilentDataFile", function(this, columns=1, skip
 
   pathname <- getPathname(this);
 
-  columnsStr <- paste(sprintf("$%d", columns), collapse=", ");
-  cmd <- sprintf("gawk '{print %s;}' '%s'", columnsStr, pathname);
-  verbose && cat(verbose, "Command:");
-  verbose && print(verbose, cmd);
+  ## Read all or many many rows?
+  if (length(columns) == 1 && (n < 0 || n > 10e3)) {
+    columnsStr <- paste(sprintf("$%d", columns), collapse=", ");
+    cmd <- sprintf("gawk '{print %s;}' '%s'", columnsStr, pathname);
+    verbose && cat(verbose, "Command:");
+    verbose && print(verbose, cmd);
 
-  # Open connection
-  con <- pipe(cmd, open="rt");
-  on.exit({
-    if (!is.null(con)) {
-      close(con);
-    }
-  }, add=TRUE);
+    # Open connection
+    con <- pipe(cmd, open="rt");
+    on.exit({
+      if (!is.null(con)) {
+        close(con);
+      }
+    }, add=TRUE);
 
-  data <- readLines(con, ..., warn=FALSE);
-  if (skip > 0) {
-    keep <- seq(from=skip+1L, to=length(data));
-    data <- data[keep];
-    rm(keep);
+    data <- readLines(con, n=n, ..., warn=FALSE)
+  } else {
+    data <- scan(pathname, what="character", nlines=1L, sep="\t", ..., quiet=TRUE)
+    what <- vector("list", length=length(data))
+    what[columns] <- "character"
+    data <- scan(pathname, what=what, nlines=n, sep="\t", flush=TRUE, fill=TRUE, ..., quiet=TRUE)
+    data <- data[columns]
   }
 
-  # Close pipe
-  close(con);
-  con <- NULL;
+  data <- unlist(data, use.names=FALSE)
+  dimNA(data) <- c(NA_integer_, length(columns))
+
+  if (skip > 0) {
+    keep <- seq(from=skip+1L, to=nrow(data))
+    data <- data[keep,,drop=FALSE]
+    keep <- NULL # Not needed anymore
+  }
+
+  if (length(columns) == 1L) data <- drop(data)
 
   data;
 })
@@ -311,21 +324,21 @@ setMethodS3("readFeaturesColumns", "AgilentDataFile", function(this, columns, ..
 
 
 setMethodS3("readSectionsIdxs", "AgilentDataFile", function(this, ...) {
-  rowType <- readColumnFast(this, column=1);
+  rowType <- readColumnFast(this, column=1L, ...);
   typeIdxs <- whichVector(rowType == "TYPE");
   nbrOfSections <- length(typeIdxs);
   keyIdxs <- typeIdxs + 1L;
   keys <- rowType[keyIdxs];
   endIdxs <- whichVector(rowType == "*");
   if (length(endIdxs) < nbrOfSections) {
-    endIdxs <- c(endIdxs, length(rowType)+1);
+    endIdxs <- c(endIdxs, length(rowType)+1L);
   }
   dataIdxs <- whichVector(rowType == "DATA");
 
   sections <- vector("list", nbrOfSections);
   names(sections) <- keys;
   for (kk in seq(along=sections)) {
-    idxs <- (keyIdxs[kk]+1):(endIdxs[kk]-1);
+    idxs <- (keyIdxs[kk]+1L):(endIdxs[kk]-1L);
     section <- list(
       typeIdx = typeIdxs[kk],
       keyIdx = keyIdxs[kk],
@@ -397,8 +410,8 @@ setMethodS3("readSections", "AgilentDataFile", function(this, sections, ...) {
   res;
 })
 
-setMethodS3("readRawHeader", "AgilentDataFile", function(this, ...) {
-  sections <- readSectionsIdxs(this, ...);
+setMethodS3("readRawHeader", "AgilentDataFile", function(this, n=100L, ...) {
+  sections <- readSectionsIdxs(this, n=n, ...);
   knownHeaderFields <- c("FEPARAMS", "STATS");
   keep <- intersect(names(sections), knownHeaderFields);
   sections <- sections[keep];
@@ -429,33 +442,60 @@ setMethodS3("nbrOfUnits", "AgilentDataFile", function(this, ...) {
 })
 
 
-setMethodS3("getScanDate", "AgilentDataFile", function(this, ..., force=FALSE) {
-  scanDate <- this$.scanDate;
-  if (force || is.null(scanDate)) {
+setMethodS3("getScanDate", "AgilentDataFile", function(this, format="%m-%d-%Y %H:%M:%S", ..., force=FALSE) {
+  value <- this$.scanDate;
+  if (force || is.null(value)) {
     hdr <- getHeader(this, ..., force=force);
     hdr <- hdr[["FEPARAMS"]];
-    scanDate <- hdr[["Scan_Date"]];
-    this$.scanDate <- scanDate;
+    value <- hdr[["Scan_Date"]];
+    if (!is.null(value)) {
+      if (length(value) != 1L) {
+        value <- NA;
+      } else {
+        value <- trim(value)
+        value <- strptime(value, format=format, ...);
+      }
+    }
+    this$.scanDate <- value;
   }
-  scanDate;
+  value;
 })
+
+setMethodS3("getGridName", "AgilentDataFile", function(this, ..., force=FALSE) {
+  value <- this$.gridName;
+  if (force || is.null(value)) {
+    hdr <- getHeader(this, ..., force=force);
+    hdr <- hdr[["FEPARAMS"]];
+    value <- hdr[["Grid_Name"]];
+    this$.gridName <- value;
+  }
+  value;
+})
+
 
 setMethodS3("getBarcode", "AgilentDataFile", function(this, ..., force=FALSE) {
-  barcode <- this$.barcode;
-  if (force || is.null(barcode)) {
+  value <- this$.barcode;
+  if (force || is.null(value)) {
     hdr <- getHeader(this, ..., force=force);
     hdr <- hdr[["FEPARAMS"]];
-    barcode <- hdr[["FeatureExtractor_Barcode"]];
-    this$.barcode <- barcode;
+    value <- hdr[["FeatureExtractor_Barcode"]];
+    this$.barcode <- value;
   }
-  barcode;
+  value;
 })
 
 
-setMethodS3("readFeatures", "AgilentDataFile", function(this, ...) {
+setMethodS3("getDesignID", "AgilentDataFile", function(this, ...) {
+  value <- getGridName(this, ...)
+  value <- gsub("^([0-9]+).*", "\\1", value)
+  value
+})
+
+
+setMethodS3("readFeatures", "AgilentDataFile", function(this, n=-1L, ...) {
   sections <- readSectionsIdxs(this, ...);
   section <- sections[["FEATURES"]];
-  readSection(this, section=section, ...);
+  readSection(this, section=section, n=n, ...);
 })
 
 
@@ -483,15 +523,12 @@ setMethodS3("nbrOfLines", "AgilentDataFile", function(this, ..., force=FALSE) {
 
 
 
-setMethodS3("exportCopyNumbers", "AgilentDataFile", function(this, dataSet, unf, ..., rootPath=c("rawCnData", "cnData"), force=FALSE, verbose=FALSE) {
+setMethodS3("exportCopyNumbers", "AgilentDataFile", function(this, dataSet, ..., rootPath=c("rawCnData", "cnData"), force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'dataSet':
   dataSet <- Arguments$getCharacter(dataSet);
-
-  # Argument 'unf':
-  unf <- Arguments$getInstanceOf(unf, "UnitNamesFile");
 
   # Argument 'rootPath':
   if (length(rootPath) > 1) {
@@ -507,7 +544,7 @@ setMethodS3("exportCopyNumbers", "AgilentDataFile", function(this, dataSet, unf,
   }
 
   verbose && enter(verbose, "Exporting ", class(this)[1]);
-
+  unf <- getUnitNamesFile(this);
   chipType <- getChipType(unf, fullname=FALSE);
 
   path <- file.path(rootPath, dataSet, chipType);
@@ -614,6 +651,8 @@ setMethodS3("exportCopyNumbers", "AgilentDataFile", function(this, dataSet, unf,
 
 ############################################################################
 # HISTORY:
+# 2015-04-01
+# o Now getScanDate() returns a POSIXct object.
 # 2014-08-21
 # o BUG FIX: getBarcode() and getScanDate() only worked if force=TRUE.
 # 2009-11-09

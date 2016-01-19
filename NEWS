@@ -1,7 +1,20 @@
 Package: aroma.agilent
 ======================
 
-Version: 0.2.2 [2015-03-01]
+Version: 0.2.2-9000 [2015-10-02]
+o Now AgilentData(File|Set) implements AromaPlatformInterface such
+  that for instance getUnitNamesFile() works.
+o Now getScanDate() returns a POSIXct object.
+o Added getScanDates() for AgilentDataSet.
+o Now print() for AgilentDataSet reports on scan dates and more.
+o CLEANUP: Dropped argument 'unf' from exportCopyNumbers().
+o CLEANUP: Dropped old internal autoload() statements.
+
+
+Version: 0.2.2 [2015-03-09]
+o Added getGridName() and getDesignID() for AgilentDataFile.
+  The latter infers the Agilent Design ID (unique for each
+  chip type) from the former.
 
 
 Version: 0.2.1 [2014-08-23]

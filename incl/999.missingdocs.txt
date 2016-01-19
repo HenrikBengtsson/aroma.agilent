@@ -1,3 +1,7 @@
+as.character.AgilentDataSet getDesignID
+getDesignID.AgilentDataFile getGridName
+getGridName.AgilentDataFile getScanDates
+getScanDates.AgilentDataSet
  AgilentDataFile as.character.AgilentDataFile
  countLines.AgilentDataFile getBarcode getBarcode.AgilentDataFile
  getColumnNames.AgilentDataFile getDimension

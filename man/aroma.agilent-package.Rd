@@ -15,7 +15,7 @@
 
 
  \description{
-   This package provides method for analysis of Agilent data.
+   Provides methods for analyzing Agilent microarray data.
  }
 
  \section{Installation and updates}{
