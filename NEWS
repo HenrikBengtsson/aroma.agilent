@@ -1,6 +1,10 @@
 Package: aroma.agilent
 ======================
 
+Version: 0.2.4 [2016-01-19]
+o Lowered version requirement for aroma.light for R 3.1.2.
+
+
 Version: 0.2.3 [2016-01-19]
 o Now AgilentData(File|Set) implements AromaPlatformInterface such
   that for instance getUnitNamesFile() works.
