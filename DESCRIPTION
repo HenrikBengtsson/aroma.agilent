@@ -1,5 +1,5 @@
 Package: aroma.agilent
-Version: 0.2.4
+Version: 0.2.4-9000
 Depends:
   R (>= 3.1.2),
   R.utils (>= 2.2.0),
