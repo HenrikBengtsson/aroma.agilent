@@ -104,19 +104,19 @@ setMethodS3("exportCopyNumbers", "AgilentDataSet", function(this, ..., rootPath=
 
   verbose && enter(verbose, "Exporting ", class(this)[1]);
   dataSet <- getFullName(this);
-  verbose && cat(verbose, "Input data set:", dataSet);
+  verbose && cat(verbose, "Input data set: ", dataSet);
 
   tags <- c("AFE", "LogRatio");
   dataSet <- paste(c(dataSet, tags), collapse=",");
-  verbose && cat(verbose, "Output data set:", dataSet);
+  verbose && cat(verbose, "Output data set: ", dataSet);
 
   unf <- getUnitNamesFile(this);
   chipType <- getChipType(unf, fullname=FALSE);
-  verbose && cat(verbose, "Chip type:", chipType);
+  verbose && cat(verbose, "Chip type: ", chipType);
 
   path <- file.path(rootPath, dataSet, chipType);
   path <- Arguments$getWritablePath(path);
-  verbose && cat(verbose, "Output path:", path);
+  verbose && cat(verbose, "Output path: ", path);
 
   for (ii in seq(this)) {
     df <- this[[ii]];
