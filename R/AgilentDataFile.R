@@ -310,7 +310,7 @@ setMethodS3("readFeaturesColumns", "AgilentDataFile", function(this, columns, ..
   columnNames <- allColumnNames[columns];
 
   data <- list();
-  for (kk in seq(along=columns)) {
+  for (kk in seq_along(columns)) {
      values <- readFeaturesColumn(this, column=columns[kk], ...);
      data[[kk]] <- values;
   } # for (kk ...)
@@ -337,7 +337,7 @@ setMethodS3("readSectionsIdxs", "AgilentDataFile", function(this, ...) {
 
   sections <- vector("list", nbrOfSections);
   names(sections) <- keys;
-  for (kk in seq(along=sections)) {
+  for (kk in seq_along(sections)) {
     idxs <- (keyIdxs[kk]+1L):(endIdxs[kk]-1L);
     section <- list(
       typeIdx = typeIdxs[kk],
@@ -384,7 +384,7 @@ setMethodS3("readSection", "AgilentDataFile", function(this, section, n=-1L, ...
 
   resKK <- vector("list", ncol);
   names(resKK) <- names;
-  for (cc in seq(length=ncol)) {
+  for (cc in seq_len(ncol)) {
     mode <- modes[cc];
     values <- data[,cc,drop=TRUE];
     if (mode == "boolean") {
@@ -403,7 +403,7 @@ setMethodS3("readSection", "AgilentDataFile", function(this, section, n=-1L, ...
 setMethodS3("readSections", "AgilentDataFile", function(this, sections, ...) {
   res <- vector("list", length(sections));
   names(res) <- names(sections);
-  for (kk in seq(along=sections)) {
+  for (kk in seq_along(sections)) {
     section <- sections[[kk]];
     res[[kk]] <- readSection(this, section=section, ...);
   } # for (kk ...)
@@ -621,7 +621,7 @@ setMethodS3("exportCopyNumbers", "AgilentDataFile", function(this, dataSet, ...,
     verbose && exit(verbose);
 
     verbose && enter(verbose, "Writing signals");
-    for (cc in seq(along=data)) {
+    for (cc in seq_along(data)) {
       df[units,cc] <- data[[cc]];
     }
     verbose && exit(verbose);
