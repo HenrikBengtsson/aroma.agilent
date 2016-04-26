@@ -1,6 +1,10 @@
 Package: aroma.agilent
 ======================
 
+Version: 0.2.4-9000 [2016-04-25]
+o CLEANUP: Objects no longer report on memory (RAM) usage.
+
+
 Version: 0.2.4 [2016-01-19]
 o Lowered version requirement for aroma.light for R 3.1.2.
 
